@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rock Paper Scissors</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            height: 100vh;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+        }
+
+        .game-container {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.08);
+            padding: 40px;
+            border-radius: 20px;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.4);
+            width: 380px;
+            animation: fadeIn 1s ease;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            font-size: 28px;
+            letter-spacing: 2px;
+        }
+
+        .score-board {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 25px;
+            font-size: 18px;
+        }
+
+        .choices {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 25px;
+        }
+
+        .choice {
+            font-size: 50px;
+            cursor: pointer;
+            transition: 0.3s ease;
+            padding: 10px;
+            border-radius: 15px;
+        }
+
+        .choice:hover {
+            transform: scale(1.2);
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+        }
+
+        .result {
+            margin-top: 15px;
+            font-size: 20px;
+            min-height: 30px;
+            font-weight: bold;
+        }
+
+        .reset-btn {
+            margin-top: 20px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            background: #ff4b2b;
+            background: linear-gradient(to right, #ff416c, #ff4b2b);
+            color: white;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .reset-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 15px rgba(255, 75, 43, 0.6);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="game-container">
+        <h1>Rock Paper Scissors</h1>
+
+        <div class="score-board">
+            <div>You: <span id="user-score">0</span></div>
+            <div>Computer: <span id="comp-score">0</span></div>
+        </div>
+
+        <div class="choices">
+            <div class="choice" data-choice="rock">✊</div>
+            <div class="choice" data-choice="paper">✋</div>
+            <div class="choice" data-choice="scissors">✌️</div>
+        </div>
+
+        <div class="result" id="result">Make your move!</div>
+
+        <button class="reset-btn" onclick="resetGame()">Reset Game</button>
+    </div>
+
+    <script>
+        const choices = document.querySelectorAll('.choice');
+        const result = document.getElementById('result');
+        const userScoreSpan = document.getElementById('user-score');
+        const compScoreSpan = document.getElementById('comp-score');
+
+        let userScore = 0;
+        let compScore = 0;
+
+        const getComputerChoice = () => {
+            const options = ['rock', 'paper', 'scissors'];
+            return options[Math.floor(Math.random() * 3)];
+        };
+
+        const getWinner = (user, computer) => {
+            if (user === computer) return "draw";
+            if (
+                (user === 'rock' && computer === 'scissors') ||
+                (user === 'paper' && computer === 'rock') ||
+                (user === 'scissors' && computer === 'paper')
+            ) return "user";
+            return "computer";
+        };
+
+        choices.forEach(choice => {
+            choice.addEventListener('click', () => {
+                const userChoice = choice.getAttribute('data-choice');
+                const computerChoice = getComputerChoice();
+                const winner = getWinner(userChoice, computerChoice);
+
+                if (winner === "draw") {
+                    result.textContent = `Draw! Both chose ${userChoice}`;
+                    result.style.color = "#f1c40f";
+                } else if (winner === "user") {
+                    userScore++;
+                    userScoreSpan.textContent = userScore;
+                    result.textContent = `You Win! ${userChoice} beats ${computerChoice}`;
+                    result.style.color = "#2ecc71";
+                } else {
+                    compScore++;
+                    compScoreSpan.textContent = compScore;
+                    result.textContent = `You Lose! ${computerChoice} beats ${userChoice}`;
+                    result.style.color = "#e74c3c";
+                }
+            });
+        });
+
+        function resetGame() {
+            userScore = 0;
+            compScore = 0;
+            userScoreSpan.textContent = 0;
+            compScoreSpan.textContent = 0;
+            result.textContent = "Make your move!";
+            result.style.color = "white";
+        }
+    </script>
+
+</body>
+
+</html>
